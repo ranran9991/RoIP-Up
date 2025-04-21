@@ -1,9 +1,8 @@
 import argparse
 import os
-import requests
 from tqdm import tqdm
 from datasets import load_dataset
-import soundfile as sf
+from src.utils.io import save_audio
 
 
 def download_audio_files(num_samples: int, output_dir: str) -> None:
@@ -13,15 +12,14 @@ def download_audio_files(num_samples: int, output_dir: str) -> None:
     for _, sample in enumerate(tqdm(dataset.select(range(num_samples)), desc="Downloading audio files")):
         signal = sample["audio"]['array']
         fs = sample['audio']['sampling_rate']
-        idx = sample['audio']['path']
-        filename = os.path.join(output_dir, f"{idx}")
-        sf.write(filename, signal, fs)
+        filename = sample['audio']['path']
+        save_audio(signal, fs, filename, output_dir)
 
 
 def main():
     parser = argparse.ArgumentParser(description="Download audio files from the ivrit-ai/crowd-transcribe-v5 dataset.")
     parser.add_argument(
-        "-n", "--num_samples", type=int, default=10,
+        "-n", "--num_samples", type=int, default=100000,
         help="Number of audio samples to download (default: 10)"
     )
     parser.add_argument(

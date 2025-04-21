@@ -1,3 +1,9 @@
 tqdm
 requests
 datasets
+librosa
+soundfile
+pydub
+transformers
+torchaudio
+matplotlib
